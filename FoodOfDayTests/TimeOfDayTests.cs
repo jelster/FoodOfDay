@@ -23,7 +23,7 @@ namespace FoodOfDayTests
                 [Test]
                 public void then_the_input_string_should_not_be_case_sensitive()
                 {
-                    var actual = mealTime;
+                    var actual = TestMealTime;
                     Assert.AreEqual(sut.TimeOfDay, actual, "Input string was not parsed correctly");
                 }
             }

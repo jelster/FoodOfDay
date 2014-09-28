@@ -6,12 +6,12 @@ namespace FoodOfDayTests
     public class given_a_morning
     {
         protected Meal sut;
-        protected const MealTime mealTime = MealTime.Morning;
+        protected const MealTime TestMealTime = MealTime.Morning;
     }
     public class given_a_night
     {
         protected Meal sut;
-        protected const MealTime mealTime = MealTime.Night;
+        protected const MealTime TestMealTime = MealTime.Night;
     }
 
     [TestFixture]
@@ -23,7 +23,7 @@ namespace FoodOfDayTests
         {
             public when_breakfast_is_served()
             {
-                sut = Meal.Create(mealTime, DishType.Entree, DishType.Drink, DishType.Side);
+                sut = Meal.Create(TestMealTime, DishType.Entree, DishType.Drink, DishType.Side);
             }
             [Test]
             public void then_the_entree_should_be_eggs()
@@ -56,7 +56,7 @@ namespace FoodOfDayTests
         {
             public when_dinner_is_served()
             {
-                sut = Meal.Create(mealTime, DishType.Entree, DishType.Side, DishType.Drink, DishType.Side, DishType.Dessert);
+                sut = Meal.Create(TestMealTime, DishType.Entree, DishType.Side, DishType.Drink, DishType.Side, DishType.Dessert);
             }
             [Test]
             public void then_the_entree_should_be_steak()

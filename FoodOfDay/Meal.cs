@@ -22,32 +22,37 @@ namespace FoodOfDay
         public Dish Drink { get { return Dish.Drinks.FirstOrDefault(x => x.MealsAllowed.Contains(TimeOfDay)); } }
         public Dish Dessert { get { return Dish.Desserts.FirstOrDefault(x => x.MealsAllowed.Contains(TimeOfDay)); } }
 
+        private readonly List<DishType> specifiedDishes = new List<DishType>();
+
+
         private static Func<Dish, DishType[], MealTime, bool> ApplicableDishesPredicate = (dish, dishArr, mealTime) => 
             dishArr.Contains(dish.Kind) && dish.MealsAllowed.Contains(mealTime);
 
         protected Meal(MealTime mealTime, params DishType[] dishes)
         {
-            var orderedDishes = dishes.OrderBy(x => x);
-            TimeOfDay = mealTime;
-
-             
-            if (TimeOfDay == MealTime.Indeterminate)
-            {
-                throw new ArgumentException("Specified MealTime is invalid.");
-            }
+            TimeOfDay = mealTime;            
         }
 
         public static Meal Create(string timeOfDay, params int[] dishes)
         {
             MealTime parsed;
-            Enum.TryParse<MealTime>(timeOfDay, true, out parsed);
+            var parseSuccessful = Enum.TryParse<MealTime>(timeOfDay, true, out parsed);
+            if (!parseSuccessful || parsed == MealTime.Indeterminate)
+            {
+                parsed = MealTime.Morning; // Everyone deserves to have breakfast at any time of the day... sometimes 2x
+
+            }
             var safeDishes = dishes.Select(x => Enum.IsDefined(typeof(DishType), x) ? (DishType)x : DishType.Indeterminate);
             return new Meal(parsed,safeDishes.ToArray());
         }
 
-        public static Meal Create(MealTime timeofDay, params DishType[] dishes)
+        public static Meal Create(MealTime timeOfDay, params DishType[] dishes)
         {
-            return new Meal(timeofDay, dishes);
+            if (timeOfDay == MealTime.Indeterminate)
+            {
+                timeOfDay = MealTime.Morning;
+            }
+                return new Meal(timeOfDay, dishes ?? new[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Dessert });
         }
     }
 }

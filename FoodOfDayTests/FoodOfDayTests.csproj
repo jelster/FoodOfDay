@@ -54,6 +54,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DishTypeTests.cs" />
+    <Compile Include="MealTests.cs" />
     <Compile Include="TimeOfDayTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
