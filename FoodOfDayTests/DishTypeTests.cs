@@ -3,7 +3,6 @@ using NUnit.Framework;
 
 namespace FoodOfDayTests
 {
-
     public class given_a_morning
     {
         protected Meal sut;
