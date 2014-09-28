@@ -17,31 +17,21 @@ namespace FoodOfDay
     {
         public MealTime TimeOfDay { get; protected set; }
 
-        public Tuple<Dish,int> Entree { get; protected set; }
-        public Tuple<Dish,int> Side { get; protected set; }
-        public Tuple<Dish,int> Drink { get; protected set; }
-        public Tuple<Dish,int> Dessert { get; protected set; }
+        public Dish Entree { get { return Dish.Entrees.FirstOrDefault(x => x.MealsAllowed.Contains(TimeOfDay)); }}
+        public Dish Side { get { return Dish.Sides.FirstOrDefault(x => x.MealsAllowed.Contains(TimeOfDay)); } }
+        public Dish Drink { get { return Dish.Drinks.FirstOrDefault(x => x.MealsAllowed.Contains(TimeOfDay)); } }
+        public Dish Dessert { get { return Dish.Desserts.FirstOrDefault(x => x.MealsAllowed.Contains(TimeOfDay)); } }
 
         private static Func<Dish, DishType[], MealTime, bool> ApplicableDishesPredicate = (dish, dishArr, mealTime) => 
             dishArr.Contains(dish.Kind) && dish.MealsAllowed.Contains(mealTime);
 
         protected Meal(MealTime mealTime, params DishType[] dishes)
         {
+            var orderedDishes = dishes.OrderBy(x => x);
             TimeOfDay = mealTime;
-            if (TimeOfDay == MealTime.Morning)
-            {
-                Entree = Tuple.Create(Dish.Entrees.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Morning)), 1);
-                Side = Tuple.Create(Dish.Sides.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Morning)), 1);
-                Drink = Tuple.Create(Dish.Drinks.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Morning)), 1);
-            }
-            else if (TimeOfDay == MealTime.Night)
-            {
-                Entree = Tuple.Create(Dish.Entrees.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night)), 1);
-                Side = Tuple.Create(Dish.Sides.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night)), 1);
-                Drink = Tuple.Create(Dish.Drinks.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night)), 1);
-                Dessert = Tuple.Create(Dish.Desserts.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night)), 1);
-            }
-            else
+
+             
+            if (TimeOfDay == MealTime.Indeterminate)
             {
                 throw new ArgumentException("Specified MealTime is invalid.");
             }
@@ -51,8 +41,8 @@ namespace FoodOfDay
         {
             MealTime parsed;
             Enum.TryParse<MealTime>(timeOfDay, true, out parsed);
-
-            return new Meal(parsed, dishes.Cast<DishType>().ToArray());
+            var safeDishes = dishes.Select(x => Enum.IsDefined(typeof(DishType), x) ? (DishType)x : DishType.Indeterminate);
+            return new Meal(parsed,safeDishes.ToArray());
         }
 
         public static Meal Create(MealTime timeofDay, params DishType[] dishes)

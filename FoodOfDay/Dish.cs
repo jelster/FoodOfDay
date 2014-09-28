@@ -17,29 +17,37 @@ namespace FoodOfDay
 
     public class Dish
     {
+        static Dictionary<DishType, Dish[]> Courses = new Dictionary<DishType, Dish[]>();
+        static Dish()
+        {
+            Courses.Add(DishType.Entree, new[] { Eggs, Steak });
+            Courses.Add(DishType.Side, new[] { Toast, Potato });
+            Courses.Add(DishType.Drink, new[] { Coffee, Wine });
+            Courses.Add(DishType.Dessert, new[] { Cake });
+        }
         // TODO: this could be factored out to be populated from an arbitrary external source
-        public static readonly Dish Eggs = new Dish("Eggs", DishType.Entree, new[] { MealTime.Morning });
-        public static readonly Dish Steak = new Dish("Steak", DishType.Entree, new[] { MealTime.Night });
-        public static readonly Dish Toast = new Dish("Toast", DishType.Side, new[] { MealTime.Morning });
-        public static readonly Dish Potato = new Dish("Potato", DishType.Side, new[] { MealTime.Night });
-        public static readonly Dish Coffee = new Dish("Coffee", DishType.Drink, new[] { MealTime.Morning });
-        public static readonly Dish Wine = new Dish("Wine", DishType.Drink, new[] { MealTime.Night });
-        public static readonly Dish Cake = new Dish("Cake", DishType.Dessert, new[] { MealTime.Night });
+        public static readonly Dish Eggs = new Dish("Eggs", new[] { MealTime.Morning });
+        public static readonly Dish Steak = new Dish("Steak", new[] { MealTime.Night });
+        public static readonly Dish Toast = new Dish("Toast", new[] { MealTime.Morning });
+        public static readonly Dish Potato = new Dish("Potato", new[] { MealTime.Night });
+        public static readonly Dish Coffee = new Dish("Coffee", new[] { MealTime.Morning });
+        public static readonly Dish Wine = new Dish("Wine", new[] { MealTime.Night });
+        public static readonly Dish Cake = new Dish("Cake", new[] { MealTime.Night });
 
-        public static IEnumerable<Dish> Entrees { get { return new[] { Dish.Eggs, Dish.Steak }; } }
-        public static IEnumerable<Dish> Sides { get { return new[] { Dish.Toast, Dish.Potato }; } }
-        public static IEnumerable<Dish> Drinks { get { return new[] { Dish.Wine, Dish.Coffee }; } }
-        public static IEnumerable<Dish> Desserts { get { return new[] { Dish.Cake }; } }
+        public static IEnumerable<Dish> Entrees { get { return Courses[DishType.Entree]; } }
+        public static IEnumerable<Dish> Sides { get { return Courses[DishType.Side]; } }
+        public static IEnumerable<Dish> Drinks { get { return Courses[DishType.Drink]; } }
+        public static IEnumerable<Dish> Desserts { get { return Courses[DishType.Dessert]; } }
 
         public string Name { get; protected set; }
         public IEnumerable<MealTime> MealsAllowed { get; protected set; }
 
         public DishType Kind { get; set; }
 
-        protected Dish(string name, DishType dish, IEnumerable<MealTime> times)
+        protected Dish(string name, IEnumerable<MealTime> times)
         {
             Name = name;
-            Kind = dish;
+            
             MealsAllowed = times ?? Enumerable.Empty<MealTime>();
         }
 
