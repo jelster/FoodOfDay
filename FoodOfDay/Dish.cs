@@ -17,12 +17,11 @@ namespace FoodOfDay
 
     public class Dish
     {
-
+        // TODO: this could be factored out to be populated from an arbitrary external source
         public static readonly Dish Eggs = new Dish("Eggs", DishType.Entree, new[] { MealTime.Morning });
         public static readonly Dish Steak = new Dish("Steak", DishType.Entree, new[] { MealTime.Night });
         public static readonly Dish Toast = new Dish("Toast", DishType.Side, new[] { MealTime.Morning });
         public static readonly Dish Potato = new Dish("Potato", DishType.Side, new[] { MealTime.Night });
-
         public static readonly Dish Coffee = new Dish("Coffee", DishType.Drink, new[] { MealTime.Morning });
         public static readonly Dish Wine = new Dish("Wine", DishType.Drink, new[] { MealTime.Night });
         public static readonly Dish Cake = new Dish("Cake", DishType.Dessert, new[] { MealTime.Night });

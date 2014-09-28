@@ -23,7 +23,7 @@ namespace FoodOfDayTests
         {
             public when_breakfast_is_served()
             {
-                sut = Meal.Create(mealTime);
+                sut = Meal.Create(mealTime, DishType.Entree, DishType.Drink, DishType.Side);
             }
             [Test]
             public void then_the_entree_should_be_eggs()
@@ -56,7 +56,7 @@ namespace FoodOfDayTests
         {
             public when_dinner_is_served()
             {
-                sut = Meal.Create(mealTime);
+                sut = Meal.Create(mealTime, DishType.Entree, DishType.Side, DishType.Drink, DishType.Side, DishType.Dessert);
             }
             [Test]
             public void then_the_entree_should_be_steak()

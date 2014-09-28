@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,21 +22,24 @@ namespace FoodOfDay
         public Dish Drink { get; protected set; }
         public Dish Dessert { get; protected set; }
 
-        protected Meal(MealTime mealTime)
+        private static Func<Dish, DishType[], MealTime, bool> ApplicableDishesPredicate = (dish, dishArr, mealTime) => 
+            dishArr.Contains(dish.Kind) && dish.MealsAllowed.Contains(mealTime);
+
+        protected Meal(MealTime mealTime, params DishType[] dishes)
         {
             TimeOfDay = mealTime;
             if (TimeOfDay == MealTime.Morning)
             {
-                Entree = Dish.Entrees.FirstOrDefault(x => x.MealsAllowed.Contains(MealTime.Morning));
-                Side = Dish.Sides.FirstOrDefault(x => x.MealsAllowed.Contains(MealTime.Morning));
-                Drink = Dish.Drinks.FirstOrDefault(x => x.MealsAllowed.Contains(MealTime.Morning));
+                Entree = Dish.Entrees.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Morning));
+                Side = Dish.Sides.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Morning));
+                Drink = Dish.Drinks.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Morning));
             }
             else if (TimeOfDay == MealTime.Night)
             {
-                Entree = Dish.Entrees.FirstOrDefault(x => x.MealsAllowed.Contains(MealTime.Night));
-                Side = Dish.Sides.FirstOrDefault(x => x.MealsAllowed.Contains(MealTime.Night));
-                Drink = Dish.Drinks.FirstOrDefault(x => x.MealsAllowed.Contains(MealTime.Night));
-                Dessert = Dish.Desserts.FirstOrDefault(x => x.MealsAllowed.Contains(MealTime.Night));
+                Entree = Dish.Entrees.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night));
+                Side = Dish.Sides.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night));
+                Drink = Dish.Drinks.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night));
+                Dessert = Dish.Desserts.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night));
             }
             else
             {
@@ -43,17 +47,17 @@ namespace FoodOfDay
             }
         }
 
-        public static Meal Create(string timeOfDay)
+        public static Meal Create(string timeOfDay, params int[] dishes)
         {
             MealTime parsed;
             Enum.TryParse<MealTime>(timeOfDay, true, out parsed);
 
-            return new Meal(parsed);
+            return new Meal(parsed, dishes.Cast<DishType>().ToArray());
         }
 
-        public static Meal Create(MealTime timeofDay)
+        public static Meal Create(MealTime timeofDay, params DishType[] dishes)
         {
-            return new Meal(timeofDay);
+            return new Meal(timeofDay, dishes);
         }
 
     }
