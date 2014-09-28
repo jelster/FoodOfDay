@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace FoodOfDay
 {
-
     public enum DishType
     {
         Indeterminate = 0,

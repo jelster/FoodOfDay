@@ -21,7 +21,6 @@ namespace FoodOfDay
         public Dish Drink { get; protected set; }
         public Dish Dessert { get; protected set; }
 
-
         protected Meal(MealTime mealTime)
         {
             TimeOfDay = mealTime;
@@ -37,15 +36,12 @@ namespace FoodOfDay
                 Side = Dish.Sides.FirstOrDefault(x => x.MealsAllowed.Contains(MealTime.Night));
                 Drink = Dish.Drinks.FirstOrDefault(x => x.MealsAllowed.Contains(MealTime.Night));
                 Dessert = Dish.Desserts.FirstOrDefault(x => x.MealsAllowed.Contains(MealTime.Night));
-
             }
             else
             {
                 throw new ArgumentException("Specified MealTime is invalid.");
             }
-
         }
-
 
         public static Meal Create(string timeOfDay)
         {
