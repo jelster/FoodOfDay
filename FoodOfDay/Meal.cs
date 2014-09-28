@@ -17,10 +17,10 @@ namespace FoodOfDay
     {
         public MealTime TimeOfDay { get; protected set; }
 
-        public Dish Entree { get; protected set; }
-        public Dish Side { get; protected set; }
-        public Dish Drink { get; protected set; }
-        public Dish Dessert { get; protected set; }
+        public Tuple<Dish,int> Entree { get; protected set; }
+        public Tuple<Dish,int> Side { get; protected set; }
+        public Tuple<Dish,int> Drink { get; protected set; }
+        public Tuple<Dish,int> Dessert { get; protected set; }
 
         private static Func<Dish, DishType[], MealTime, bool> ApplicableDishesPredicate = (dish, dishArr, mealTime) => 
             dishArr.Contains(dish.Kind) && dish.MealsAllowed.Contains(mealTime);
@@ -30,16 +30,16 @@ namespace FoodOfDay
             TimeOfDay = mealTime;
             if (TimeOfDay == MealTime.Morning)
             {
-                Entree = Dish.Entrees.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Morning));
-                Side = Dish.Sides.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Morning));
-                Drink = Dish.Drinks.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Morning));
+                Entree = Tuple.Create(Dish.Entrees.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Morning)), 1);
+                Side = Tuple.Create(Dish.Sides.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Morning)), 1);
+                Drink = Tuple.Create(Dish.Drinks.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Morning)), 1);
             }
             else if (TimeOfDay == MealTime.Night)
             {
-                Entree = Dish.Entrees.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night));
-                Side = Dish.Sides.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night));
-                Drink = Dish.Drinks.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night));
-                Dessert = Dish.Desserts.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night));
+                Entree = Tuple.Create(Dish.Entrees.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night)), 1);
+                Side = Tuple.Create(Dish.Sides.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night)), 1);
+                Drink = Tuple.Create(Dish.Drinks.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night)), 1);
+                Dessert = Tuple.Create(Dish.Desserts.FirstOrDefault(x => Meal.ApplicableDishesPredicate(x, dishes, MealTime.Night)), 1);
             }
             else
             {
@@ -59,6 +59,5 @@ namespace FoodOfDay
         {
             return new Meal(timeofDay, dishes);
         }
-
     }
 }

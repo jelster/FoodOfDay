@@ -28,19 +28,19 @@ namespace FoodOfDayTests
             [Test]
             public void then_the_entree_should_be_eggs()
             {
-                Assert.AreEqual(Dish.Eggs, sut.Entree);
+                Assert.AreEqual(Dish.Eggs, sut.Entree.Item1);
             }
 
             [Test]
             public void then_the_side_should_be_toast()
             {
-                Assert.AreEqual(Dish.Toast, sut.Side);
+                Assert.AreEqual(Dish.Toast, sut.Side.Item1);
             }
 
             [Test]
             public void then_the_drink_should_be_coffee()
             {
-                Assert.AreEqual(Dish.Coffee, sut.Drink);
+                Assert.AreEqual(Dish.Coffee, sut.Drink.Item1);
             }
 
             [Test]
@@ -61,25 +61,25 @@ namespace FoodOfDayTests
             [Test]
             public void then_the_entree_should_be_steak()
             {
-                Assert.AreEqual(Dish.Steak, sut.Entree);
+                Assert.AreEqual(Dish.Steak, sut.Entree.Item1);
             }
 
             [Test]
             public void then_the_side_should_be_potato()
             {
-                Assert.AreEqual(Dish.Potato, sut.Side);
+                Assert.AreEqual(Dish.Potato, sut.Side.Item1);
             }
 
             [Test]
             public void then_the_drink_should_be_wine()
             {
-                Assert.AreEqual(Dish.Wine, sut.Drink);
+                Assert.AreEqual(Dish.Wine, sut.Drink.Item1);
             }
 
             [Test]
             public void then_dessert_should_be_cake()
             {
-                Assert.AreEqual(Dish.Cake, sut.Dessert);
+                Assert.AreEqual(Dish.Cake, sut.Dessert.Item1);
             }
         }
 
