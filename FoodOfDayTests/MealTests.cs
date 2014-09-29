@@ -29,9 +29,7 @@ namespace FoodOfDayTests
             ExpectedOutputOrder.Add(2, DishType.Side);
             ExpectedOutputOrder.Add(3, DishType.Drink);
             ExpectedOutputOrder.Add(4, DishType.Dessert);
-        }
-
-        
+        }        
     }
 
     [TestFixture]
@@ -80,6 +78,52 @@ namespace FoodOfDayTests
             {
                 Assert.AreEqual(sutSummary.First(x => x.Item1 == DishType.Drink).Item2, TiredBreakfast.Count(y => y == DishType.Drink));
             }
+        }
+
+        [TestFixture]
+        public class when_dinner_is_ordered : given_a_meal_ticket
+        {
+            // TODO: extract base class for this and the breakfast tests
+            public when_dinner_is_ordered()
+            {
+                sut = Meal.Create(MealTime.Night, Dinner);
+                sutSummary = sut.GenerateMealSummary();
+            }
+
+            [Test]
+            public void then_mealtime_is_dinner()
+            {
+                Assert.AreEqual(MealTime.Night, sut.TimeOfDay);
+            }
+
+            [Test]
+            public void then_meal_summary_is_not_empty()
+            {
+                Assert.IsNotEmpty(sutSummary);
+            }
+
+            [Test]
+            public void then_meal_summary_is_ordered()
+            {
+                CollectionAssert.IsOrdered(sutSummary);
+            }
+        }
+
+        [TestFixture]
+        public class when_hunger_sets_in : given_a_meal_ticket
+        {
+            public when_hunger_sets_in()
+            {
+                sut = Meal.Create(MealTime.Night, HungryDinner);
+                sutSummary = sut.GenerateMealSummary();
+            }
+
+            [Test]
+            public void then_enough_potatos_for_all()
+            {
+                Assert.AreEqual(sutSummary.First(x => x.Item1 == DishType.Side).Item2, HungryDinner.Count(y => y == DishType.Side));
+            }
+
         }
 
     }
