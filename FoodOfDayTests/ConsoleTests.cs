@@ -53,7 +53,30 @@ namespace FoodOfDayTests
             const string expected = "eggs, toast, coffee, error";
             Console.WriteLine(output);
             Assert.AreEqual(expected, output);
+        }
 
+        [Test]
+        public void MultipleDishesOutputCount()
+        {
+            var opts = FoodConsoleOptions.Parse(new[] { "morning", "1", "2", "3", "3", "3" });
+            var meal = Meal.Create(opts.TimeOfDay, opts.FoodOrder.ToArray());
+            var output = FoodConsole.GetMealOutput(meal.GenerateMealSummary(), opts);
+
+            const string expected = "eggs, toast, coffee(x3)";
+            Console.WriteLine(output);
+            Assert.AreEqual(expected, output);
+        }
+
+        [Test]
+        public void OutOfOrderInputOutputsCorrectOrder()
+        {
+            var opts = FoodConsoleOptions.Parse(new[] { "morning", "2", "1", "3" });
+            var meal = Meal.Create(opts.TimeOfDay, opts.FoodOrder.ToArray());
+            var output = FoodConsole.GetMealOutput(meal.GenerateMealSummary(), opts);
+
+            const string expected = "eggs, toast, coffee";
+            Console.WriteLine(output);
+            Assert.AreEqual(expected, output);
         }
     }
 }

@@ -101,7 +101,7 @@ namespace FoodOfDay
        
         public IEnumerable<CourseInfo> GenerateMealSummary()
         {
-            var groups = specifiedDishes.GroupBy(x => x).Select(x =>new CourseInfo { Dish = this[x.Key] ?? Dish.Empty, Count = x.Count() });
+            var groups = specifiedDishes.OrderBy(x => x).GroupBy(x => x).Select(x =>new CourseInfo { Dish = this[x.Key] ?? Dish.Empty, Count = x.Count() });
             foreach (var item in groups)
             {                
                 if (TimeOfDay == MealTime.Morning && item.Dish.Kind != DishType.Drink && item.Count > 1)
