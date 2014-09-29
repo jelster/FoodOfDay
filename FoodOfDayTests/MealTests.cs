@@ -1,0 +1,62 @@
+﻿using System;
+using System.Collections;
+
+using System.Collections.Generic;
+
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using NUnit.Framework;
+using FoodOfDay;
+
+
+namespace FoodOfDayTests
+{
+    public class given_a_meal_ticket
+    {
+        protected Meal sut;
+        protected readonly DishType[] Breakfast = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink };
+        protected readonly DishType[] Dinner = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Dessert };
+        protected readonly DishType[] TiredBreakfast = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Drink, DishType.Drink };
+        protected readonly DishType[] HungryDinner = new DishType[] { DishType.Entree, DishType.Side, DishType.Side, DishType.Drink, DishType.Dessert };
+        protected readonly SortedList<int, DishType> ExpectedOutputOrder = new SortedList<int, DishType>();
+        protected const DishType ErrorFlag = DishType.Indeterminate;
+        public given_a_meal_ticket()
+        {
+            ExpectedOutputOrder.Add(1, DishType.Entree);
+            ExpectedOutputOrder.Add(2, DishType.Side);
+            ExpectedOutputOrder.Add(3, DishType.Drink);
+            ExpectedOutputOrder.Add(4, DishType.Dessert);
+        }
+
+        
+    }
+
+    [TestFixture]
+    public class MealTests
+    {
+        [TestFixture]
+        public class when_breakfast_is_ordered : given_a_meal_ticket
+        {
+            public when_breakfast_is_ordered()
+            {
+                sut = Meal.Create(MealTime.Morning, Breakfast);
+            }
+
+            [Test]
+            public void then_mealtime_is_morning()
+            {
+                Assert.AreEqual(MealTime.Morning, sut.TimeOfDay);
+            }
+
+            [Test]
+            public void then_()
+            {
+
+            }
+
+            
+        }
+
+    }
+}

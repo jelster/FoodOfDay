@@ -8,7 +8,7 @@ namespace FoodOfDay
 {
     public enum DishType
     {
-        Indeterminate = 0,
+        Indeterminate = 0, 
         Entree = 1,
         Side = 2,
         Drink = 3,
@@ -46,8 +46,7 @@ namespace FoodOfDay
 
         protected Dish(string name, IEnumerable<MealTime> times)
         {
-            Name = name;
-            
+            Name = name;            
             MealsAllowed = times ?? Enumerable.Empty<MealTime>();
         }
 
