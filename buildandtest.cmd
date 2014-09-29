@@ -1,0 +1,3 @@
+@echo Building FoodOfDay application...
+@echo off
+"%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe" FoodOfDay.sln /t:Clean;Build && ".\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe" .\FoodOfDayTests\FoodOfDayTests.csproj /wait
