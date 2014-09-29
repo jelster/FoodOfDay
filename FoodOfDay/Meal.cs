@@ -54,10 +54,7 @@ namespace FoodOfDay
             return new Meal(timeOfDay, dishes ?? new[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Dessert });
         }
 
-        public void ValidateDishes()
-        {
-
-        }
+       
         public IEnumerable<Tuple<DishType, int>> GenerateMealSummary()
         {
             var groups = specifiedDishes.GroupBy(x => x).Select(x => Tuple.Create<DishType, int>(x.Key, x.Count()));

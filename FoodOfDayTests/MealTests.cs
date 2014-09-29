@@ -16,7 +16,7 @@ namespace FoodOfDayTests
     {
         protected Meal sut;
         // TODO: using Tuple hinders readability. maybe this gets wrapped?
-        protected IEnumerable<Tuple<DishType, int>> sutSummary;
+        protected List<Tuple<DishType, int>> sutSummary;
 
         protected readonly DishType[] Breakfast = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink };
         protected readonly DishType[] Dinner = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Dessert };
@@ -162,6 +162,7 @@ namespace FoodOfDayTests
             public void then_an_indeterminate_is_returned_after_the_first_dessert()
             {               
                 Assert.True(sutSummary.Any(y => y.Item1 == DishType.Indeterminate));
+ 
                 Assert.True(sutSummary.Count(y => y.Item1 == DishType.Dessert) == 1);
             }
         }

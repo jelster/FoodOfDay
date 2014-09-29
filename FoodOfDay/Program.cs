@@ -16,7 +16,7 @@ namespace FoodOfDay
         {
             MealTime time;
             Enum.TryParse(p[0], true, out time);
-            return new FoodConsoleOptions() { TimeOfDay = time };
+            return new FoodConsoleOptions() { TimeOfDay = time, FoodOrder = p.Skip(1).Select(x => Convert.ToInt32(x)).Cast<DishType>() };
         }
     }
     public class FoodConsole
