@@ -17,16 +17,14 @@ namespace FoodOfDay
     {
         public MealTime TimeOfDay { get; protected set; }
 
-        public Dish Entree { get { return Dish.Entrees.FirstOrDefault(x => x.MealsAllowed.Contains(TimeOfDay)); }}
-        public Dish Side { get { return Dish.Sides.FirstOrDefault(x => x.MealsAllowed.Contains(TimeOfDay)); } }
-        public Dish Drink { get { return Dish.Drinks.FirstOrDefault(x => x.MealsAllowed.Contains(TimeOfDay)); } }
-        public Dish Dessert { get { return Dish.Desserts.FirstOrDefault(x => x.MealsAllowed.Contains(TimeOfDay)); } }
+        public Dish Entree { get { return Dish.Entrees.FirstOrDefault(TimeFilter); } }
+
+
+        public Dish Side { get { return Dish.Sides.FirstOrDefault(TimeFilter); } }
+        public Dish Drink { get { return Dish.Drinks.FirstOrDefault(TimeFilter); } }
+        public Dish Dessert { get { return Dish.Desserts.FirstOrDefault(TimeFilter); } }
 
         private readonly List<DishType> specifiedDishes = new List<DishType>();
-
-
-        private static Func<Dish, DishType[], MealTime, bool> ApplicableDishesPredicate = (dish, dishArr, mealTime) => 
-            dishArr.Contains(dish.Kind) && dish.MealsAllowed.Contains(mealTime);
 
         protected Meal(MealTime mealTime, params DishType[] dishes)
         {
@@ -56,10 +54,34 @@ namespace FoodOfDay
             return new Meal(timeOfDay, dishes ?? new[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Dessert });
         }
 
+        public void ValidateDishes()
+        {
+
+        }
         public IEnumerable<Tuple<DishType, int>> GenerateMealSummary()
         {
-            var dishes = specifiedDishes.ToList();
-            return specifiedDishes.Distinct().Select(x => Tuple.Create<DishType, int>(x, dishes.Count(d => d == x)));
+            var groups = specifiedDishes.GroupBy(x => x).Select(x => Tuple.Create<DishType, int>(x.Key, x.Count()));
+            foreach (var item in groups)
+            {
+                
+                if (TimeOfDay == MealTime.Morning && item.Item1 != DishType.Drink && item.Item2 > 1)
+                {
+                    yield return Tuple.Create<DishType, int>(DishType.Indeterminate, item.Item2);
+                    yield return item;
+                    break;
+                }
+                if (TimeOfDay == MealTime.Night && item.Item1 != DishType.Side && item.Item2 > 1)
+                {
+                    yield return Tuple.Create<DishType, int>(DishType.Indeterminate, item.Item2);
+                    yield return item;
+
+                    break;
+                }
+                yield return item;
+            }
+            
         }
+
+        private bool TimeFilter(Dish dish) { return dish.MealsAllowed.Contains(TimeOfDay); }
     }
 }

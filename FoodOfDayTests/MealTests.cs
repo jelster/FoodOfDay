@@ -15,12 +15,15 @@ namespace FoodOfDayTests
     public class given_a_meal_ticket
     {
         protected Meal sut;
+        // TODO: using Tuple hinders readability. maybe this gets wrapped?
         protected IEnumerable<Tuple<DishType, int>> sutSummary;
 
         protected readonly DishType[] Breakfast = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink };
         protected readonly DishType[] Dinner = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Dessert };
         protected readonly DishType[] TiredBreakfast = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Drink, DishType.Drink };
         protected readonly DishType[] HungryDinner = new DishType[] { DishType.Entree, DishType.Side, DishType.Side, DishType.Drink, DishType.Dessert };
+
+        protected readonly DishType[] PiggyDinner = new DishType[] { DishType.Entree, DishType.Side, DishType.Side, DishType.Drink, DishType.Dessert, DishType.Dessert, DishType.Dessert };
         protected readonly SortedList<int, DishType> ExpectedOutputOrder = new SortedList<int, DishType>();
         protected const DishType ErrorFlag = DishType.Indeterminate;
         public given_a_meal_ticket()
@@ -124,6 +127,23 @@ namespace FoodOfDayTests
                 Assert.AreEqual(sutSummary.First(x => x.Item1 == DishType.Side).Item2, HungryDinner.Count(y => y == DishType.Side));
             }
 
+        }
+
+        [TestFixture]
+        public class when_dinner_pigs_out : given_a_meal_ticket
+        {
+            public when_dinner_pigs_out()
+            {
+                sut = Meal.Create(MealTime.Night, PiggyDinner);
+                sutSummary = sut.GenerateMealSummary();
+            }
+
+            [Test]
+            public void then_an_indeterminate_is_returned_after_the_first_dessert()
+            {               
+                Assert.True(sutSummary.Any(y => y.Item1 == DishType.Indeterminate));
+                Assert.True(sutSummary.Count(y => y.Item1 == DishType.Dessert) == 1);
+            }
         }
 
     }
