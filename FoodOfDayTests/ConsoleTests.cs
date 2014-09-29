@@ -33,6 +33,15 @@ namespace FoodOfDayTests
         }
 
         [Test]
+        public void ProgramDoesNotThrowIfArgsHaveCommas()
+        {
+            var argString = new [] {"morning,", "1,", "2,", "3" };
+            FoodConsoleOptions options;
+            Assert.DoesNotThrow(() => options = FoodConsoleOptions.Parse(argString));
+           
+        }
+
+        [Test]
         public void ValidInputShouldOutputDishes()
         {
             var opts = FoodConsoleOptions.Parse(new[] { "morning", "1", "2", "3" });

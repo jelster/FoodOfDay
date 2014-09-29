@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,12 +35,28 @@ namespace FoodOfDay
     {
         static void Main(string[] args)
         {
-            var options = FoodConsoleOptions.Parse(args);
+            FoodConsoleOptions options = null;
+            var sanitized = args.Select(x => x.Replace(",", string.Empty)).ToArray();
+            try
+            {
+                options = FoodConsoleOptions.Parse(sanitized);
+            }
+            catch (Exception ex)
+            {
 
+                Console.WriteLine("FoodOfDay usage:");
+                Console.WriteLine("foodofday.exe <timeofday>, <dish>[1,...N]");
+                Console.WriteLine("Exception caught: " + ex.Message);
+                Environment.Exit(-1);
+
+            }
+            Debug.Assert(options != null);
             var meal = Meal.Create(options.TimeOfDay, options.FoodOrder.ToArray());
             var summary = meal.GenerateMealSummary();
             var outputText = GetMealOutput(summary, options);
             Console.WriteLine(outputText);
+
+            Console.ReadKey();
            
         }
 
