@@ -30,7 +30,8 @@ namespace FoodOfDay
 
         protected Meal(MealTime mealTime, params DishType[] dishes)
         {
-            TimeOfDay = mealTime;            
+            TimeOfDay = mealTime;
+            specifiedDishes.AddRange(dishes);
         }
 
         public static Meal Create(string timeOfDay, params int[] dishes)
@@ -42,8 +43,8 @@ namespace FoodOfDay
                 parsed = MealTime.Morning; // Everyone deserves to have breakfast at any time of the day... sometimes 2x
 
             }
-            var safeDishes = dishes.Select(x => Enum.IsDefined(typeof(DishType), x) ? (DishType)x : DishType.Indeterminate);
-            return new Meal(parsed,safeDishes.ToArray());
+            var safeDishes = dishes.Select(x => Enum.IsDefined(typeof(DishType), x) ? (DishType)x : DishType.Indeterminate).ToArray();
+            return Meal.Create(parsed, safeDishes);
         }
 
         public static Meal Create(MealTime timeOfDay, params DishType[] dishes)
@@ -52,7 +53,13 @@ namespace FoodOfDay
             {
                 timeOfDay = MealTime.Morning;
             }
-                return new Meal(timeOfDay, dishes ?? new[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Dessert });
+            return new Meal(timeOfDay, dishes ?? new[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Dessert });
+        }
+
+        public IEnumerable<Tuple<DishType, int>> GenerateMealSummary()
+        {
+            var dishes = specifiedDishes.ToList();
+            return specifiedDishes.Distinct().Select(x => Tuple.Create<DishType, int>(x, dishes.Count(d => d == x)));
         }
     }
 }

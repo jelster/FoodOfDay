@@ -15,6 +15,8 @@ namespace FoodOfDayTests
     public class given_a_meal_ticket
     {
         protected Meal sut;
+        protected IEnumerable<Tuple<DishType, int>> sutSummary;
+
         protected readonly DishType[] Breakfast = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink };
         protected readonly DishType[] Dinner = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Dessert };
         protected readonly DishType[] TiredBreakfast = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Drink, DishType.Drink };
@@ -41,6 +43,7 @@ namespace FoodOfDayTests
             public when_breakfast_is_ordered()
             {
                 sut = Meal.Create(MealTime.Morning, Breakfast);
+                sutSummary = sut.GenerateMealSummary();
             }
 
             [Test]
@@ -50,12 +53,33 @@ namespace FoodOfDayTests
             }
 
             [Test]
-            public void then_()
+            public void then_meal_summary_is_not_empty()
             {
-
+                Assert.IsNotEmpty(sutSummary);
             }
 
-            
+            [Test]
+            public void then_meal_summary_is_in_proper_order()
+            {
+                CollectionAssert.IsOrdered(sutSummary);
+
+            }   
+        }
+
+        [TestFixture]
+        public class when_breakfast_is_ordered_after_a_long_night_coding : given_a_meal_ticket
+        {
+            public when_breakfast_is_ordered_after_a_long_night_coding()
+            {
+                sut = Meal.Create(MealTime.Morning, TiredBreakfast);
+                sutSummary = sut.GenerateMealSummary();
+            }
+
+            [Test]
+            public void then_there_is_enough_coffee_to_stay_awake()
+            {
+                Assert.AreEqual(sutSummary.First(x => x.Item1 == DishType.Drink).Item2, TiredBreakfast.Count(y => y == DishType.Drink));
+            }
         }
 
     }

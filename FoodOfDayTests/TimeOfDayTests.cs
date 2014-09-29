@@ -28,12 +28,7 @@ namespace FoodOfDayTests
             public void then_the_input_string_should_not_be_case_sensitive()
             {
                 Assert.AreEqual(MealTime.Morning, sut.TimeOfDay, "Input string was not parsed correctly");
-            }
-
-            [Test]
-            public void then_()
-            {
-             }
+            }            
         }
     }
 
