@@ -44,7 +44,7 @@ namespace FoodOfDayTests
             public when_breakfast_is_ordered()
             {
                 sut = Meal.Create(MealTime.Morning, Breakfast);
-                sutSummary = sut.GenerateMealSummary();
+                sutSummary = sut.GenerateMealSummary().ToList();
             }
 
             [Test]
@@ -60,7 +60,7 @@ namespace FoodOfDayTests
             }
 
             [Test]
-            public void then_meal_summary_is_in_proper_order()
+            public void then_meal_summary_is_ordered()
             {
                 CollectionAssert.IsOrdered(sutSummary);
 
@@ -73,7 +73,7 @@ namespace FoodOfDayTests
             public when_breakfast_is_ordered_after_a_long_night_coding()
             {
                 sut = Meal.Create(MealTime.Morning, TiredBreakfast);
-                sutSummary = sut.GenerateMealSummary();
+                sutSummary = sut.GenerateMealSummary().ToList();
             }
 
             [Test]
@@ -81,16 +81,22 @@ namespace FoodOfDayTests
             {
                 Assert.AreEqual(sutSummary.First(x => x.Item1 == DishType.Drink).Item2, TiredBreakfast.Count(y => y == DishType.Drink));
             }
+
+            [Test]
+            public void then_there_are_no_indeterminate_dishes()
+            {
+                Assert.IsNull(sutSummary.FirstOrDefault(x => x.Item1 == DishType.Indeterminate));
+            }
         }
 
         [TestFixture]
         public class when_dinner_is_ordered : given_a_meal_ticket
         {
-            // TODO: extract base class for this and the breakfast tests
+            // TODO: extract base class for this and the breakfast tests - maybe ValidMeal?
             public when_dinner_is_ordered()
             {
                 sut = Meal.Create(MealTime.Night, Dinner);
-                sutSummary = sut.GenerateMealSummary();
+                sutSummary = sut.GenerateMealSummary().ToList();
             }
 
             [Test]
@@ -110,6 +116,13 @@ namespace FoodOfDayTests
             {
                 CollectionAssert.IsOrdered(sutSummary);
             }
+
+            [Test]
+            public void then_there_are_no_indeterminate_dishes()
+            {
+                Assert.IsNull(sutSummary.FirstOrDefault(x => x.Item1 == DishType.Indeterminate));
+            }
+
         }
 
         [TestFixture]
@@ -118,7 +131,7 @@ namespace FoodOfDayTests
             public when_hunger_sets_in()
             {
                 sut = Meal.Create(MealTime.Night, HungryDinner);
-                sutSummary = sut.GenerateMealSummary();
+                sutSummary = sut.GenerateMealSummary().ToList();
             }
 
             [Test]
@@ -127,15 +140,22 @@ namespace FoodOfDayTests
                 Assert.AreEqual(sutSummary.First(x => x.Item1 == DishType.Side).Item2, HungryDinner.Count(y => y == DishType.Side));
             }
 
+            [Test]
+            public void then_there_are_no_indeterminate_dishes()
+            {
+                Assert.IsNull(sutSummary.FirstOrDefault(x => x.Item1 == DishType.Indeterminate));
+            }
+
         }
 
         [TestFixture]
         public class when_dinner_pigs_out : given_a_meal_ticket
         {
+            // TODO: extract base test class - InvalidMeal?
             public when_dinner_pigs_out()
             {
                 sut = Meal.Create(MealTime.Night, PiggyDinner);
-                sutSummary = sut.GenerateMealSummary();
+                sutSummary = sut.GenerateMealSummary().ToList();
             }
 
             [Test]
