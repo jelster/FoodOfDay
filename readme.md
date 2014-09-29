@@ -1,7 +1,10 @@
-## FoodOf Day README
+#README
+
+## FoodOfDay Kata 
+
 
 ##Example usage
-`C:\Source\FoodOfDay> foodofday morning 1, 2, 3`
+`C:\Source\FoodOfDay\output> foodofday morning 1, 2, 3`
 
 `eggs, toast, coffee` 
 
@@ -15,6 +18,8 @@ FoodOfDay can be built using the provided DOS- command line script:
 
  c:\source\foodofday> buildandtest.cmd 
 
+###Build artifacts and output
+You can find the output of the build process in a folder created by the build, `FoodOfDay\output\`
 ####Note: 
 the script assumes that MSBuild is available in your `%ProgramFiles(x86)%\MSBuild\12.0\Bin\` folder. If that's not the case, you may have to adjust the path in the batch file accordingly.
 
