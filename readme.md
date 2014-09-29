@@ -4,7 +4,7 @@
 
 
 ##Example usage
-`C:\Source\FoodOfDay\output> foodofday morning 1, 2, 3`
+`C:\Source\FoodOfDay\output> foodofday morning, 1, 2, 3`
 
 `eggs, toast, coffee` 
 
