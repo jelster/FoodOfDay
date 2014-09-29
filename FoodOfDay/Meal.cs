@@ -13,18 +13,53 @@ namespace FoodOfDay
         Morning = 1,
         Night = 2
     }
+    public class CourseInfo : IComparable<CourseInfo>
+    {
+        public int Count { get; set; }
+        public Dish Dish { get; set; }
+
+        public int CompareTo(CourseInfo other)
+        {
+            return Dish.Kind.CompareTo(other.Dish.Kind);
+        }
+    }
     public class Meal
     {
+        public Dish this[DishType d] {
+            get {
+                Dish dish;
+                switch (d) {
+                    case DishType.Entree:
+                        dish = this.Entree;
+                        break;
+                    case DishType.Side:
+                        dish = this.Side;
+                        break;
+                    case DishType.Drink:
+                        dish = this.Drink;
+                        break;
+                    case DishType.Dessert:
+                        dish = this.Dessert;
+                        break;
+                    case DishType.Indeterminate:
+                        dish = Dish.Empty;
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
+                return dish;
+            }
+        }
         public MealTime TimeOfDay { get; protected set; }
 
         public Dish Entree { get { return Dish.Entrees.FirstOrDefault(TimeFilter); } }
-
 
         public Dish Side { get { return Dish.Sides.FirstOrDefault(TimeFilter); } }
         public Dish Drink { get { return Dish.Drinks.FirstOrDefault(TimeFilter); } }
         public Dish Dessert { get { return Dish.Desserts.FirstOrDefault(TimeFilter); } }
 
         private readonly List<DishType> specifiedDishes = new List<DishType>();
+        
 
         protected Meal(MealTime mealTime, params DishType[] dishes)
         {
@@ -55,30 +90,27 @@ namespace FoodOfDay
         }
 
        
-        public IEnumerable<Tuple<DishType, int>> GenerateMealSummary()
+        public IEnumerable<CourseInfo> GenerateMealSummary()
         {
-            var groups = specifiedDishes.GroupBy(x => x).Select(x => Tuple.Create<DishType, int>(x.Key, x.Count()));
+            var groups = specifiedDishes.GroupBy(x => x).Select(x =>new CourseInfo { Dish = this[x.Key], Count = x.Count() });
             foreach (var item in groups)
-            {
-                
-                if (TimeOfDay == MealTime.Morning && item.Item1 != DishType.Drink && item.Item2 > 1)
+            {                
+                if (TimeOfDay == MealTime.Morning && item.Dish.Kind != DishType.Drink && item.Count > 1)
                 {
                     yield return item;
-                    yield return Tuple.Create<DishType, int>(DishType.Indeterminate, item.Item2);
+                    yield return new CourseInfo { Dish = Dish.Empty, Count = 1 };
                    
                     break;
                 }
-                if (TimeOfDay == MealTime.Night && item.Item1 != DishType.Side && item.Item2 > 1)
+                if (TimeOfDay == MealTime.Night && item.Dish.Kind != DishType.Side && item.Count > 1)
                 {
                     yield return item;
-                    yield return Tuple.Create<DishType, int>(DishType.Indeterminate, item.Item2);
-                   
+                    yield return new CourseInfo { Dish = Dish.Empty, Count = 1 };                
 
                     break;
                 }
                 yield return item;
-            }
-            
+            }            
         }
 
         private bool TimeFilter(Dish dish) { return dish.MealsAllowed.Contains(TimeOfDay); }

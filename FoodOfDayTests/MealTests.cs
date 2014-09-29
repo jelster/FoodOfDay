@@ -16,7 +16,7 @@ namespace FoodOfDayTests
     {
         protected Meal sut;
         // TODO: using Tuple hinders readability. maybe this gets wrapped?
-        protected List<Tuple<DishType, int>> sutSummary;
+        protected List<CourseInfo> sutSummary;
 
         protected readonly DishType[] Breakfast = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink };
         protected readonly DishType[] Dinner = new DishType[] { DishType.Entree, DishType.Side, DishType.Drink, DishType.Dessert };
@@ -79,13 +79,13 @@ namespace FoodOfDayTests
             [Test]
             public void then_there_is_enough_coffee_to_stay_awake()
             {
-                Assert.AreEqual(sutSummary.First(x => x.Item1 == DishType.Drink).Item2, TiredBreakfast.Count(y => y == DishType.Drink));
+                Assert.AreEqual(sutSummary.First(x => x.Dish.Kind == DishType.Drink).Count, TiredBreakfast.Count(y => y == DishType.Drink));
             }
 
             [Test]
             public void then_there_are_no_indeterminate_dishes()
             {
-                Assert.IsNull(sutSummary.FirstOrDefault(x => x.Item1 == DishType.Indeterminate));
+                Assert.IsFalse(sutSummary.Any(x => x.Dish.Kind == DishType.Indeterminate));
             }
         }
 
@@ -120,7 +120,7 @@ namespace FoodOfDayTests
             [Test]
             public void then_there_are_no_indeterminate_dishes()
             {
-                Assert.IsNull(sutSummary.FirstOrDefault(x => x.Item1 == DishType.Indeterminate));
+                Assert.IsNull(sutSummary.FirstOrDefault(x => x.Dish.Kind == DishType.Indeterminate));
             }
 
         }
@@ -137,13 +137,13 @@ namespace FoodOfDayTests
             [Test]
             public void then_enough_potatos_for_all()
             {
-                Assert.AreEqual(sutSummary.First(x => x.Item1 == DishType.Side).Item2, HungryDinner.Count(y => y == DishType.Side));
+                Assert.AreEqual(sutSummary.First(x => x.Dish.Kind == DishType.Side).Count, HungryDinner.Count(y => y == DishType.Side));
             }
 
             [Test]
             public void then_there_are_no_indeterminate_dishes()
             {
-                Assert.IsNull(sutSummary.FirstOrDefault(x => x.Item1 == DishType.Indeterminate));
+                Assert.IsNull(sutSummary.FirstOrDefault(x => x.Dish.Kind == DishType.Indeterminate));
             }
 
         }
@@ -161,14 +161,14 @@ namespace FoodOfDayTests
             [Test]
             public void then_there_is_a_single_dessert_in_summary()
             {
-                Assert.True(sutSummary.Count(y => y.Item1 == DishType.Dessert) == 1);
+                Assert.True(sutSummary.Count(y => y.Dish.Kind == DishType.Dessert) == 1);
             }
             [Test]
             public void then_an_indeterminate_is_returned_after_the_first_dessert()
             {
-                var indeterminateDish = sutSummary.SingleOrDefault(x => x.Item1 == DishType.Indeterminate);
+                var indeterminateDish = sutSummary.SingleOrDefault(x => x.Dish.Kind == DishType.Indeterminate);
                 Assert.IsNotNull(indeterminateDish);
-                var dessert = sutSummary.SingleOrDefault(x => x.Item1 == DishType.Dessert);
+                var dessert = sutSummary.SingleOrDefault(x => x.Dish.Kind == DishType.Dessert);
 
                 var indyIdx = sutSummary.IndexOf(indeterminateDish);
                 var desIdx = sutSummary.IndexOf(dessert);
