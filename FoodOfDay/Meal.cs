@@ -63,14 +63,16 @@ namespace FoodOfDay
                 
                 if (TimeOfDay == MealTime.Morning && item.Item1 != DishType.Drink && item.Item2 > 1)
                 {
-                    yield return Tuple.Create<DishType, int>(DishType.Indeterminate, item.Item2);
                     yield return item;
+                    yield return Tuple.Create<DishType, int>(DishType.Indeterminate, item.Item2);
+                   
                     break;
                 }
                 if (TimeOfDay == MealTime.Night && item.Item1 != DishType.Side && item.Item2 > 1)
                 {
-                    yield return Tuple.Create<DishType, int>(DishType.Indeterminate, item.Item2);
                     yield return item;
+                    yield return Tuple.Create<DishType, int>(DishType.Indeterminate, item.Item2);
+                   
 
                     break;
                 }

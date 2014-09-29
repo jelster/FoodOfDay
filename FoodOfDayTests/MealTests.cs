@@ -32,7 +32,7 @@ namespace FoodOfDayTests
             ExpectedOutputOrder.Add(2, DishType.Side);
             ExpectedOutputOrder.Add(3, DishType.Drink);
             ExpectedOutputOrder.Add(4, DishType.Dessert);
-        }        
+        }
     }
 
     [TestFixture]
@@ -64,7 +64,7 @@ namespace FoodOfDayTests
             {
                 CollectionAssert.IsOrdered(sutSummary);
 
-            }   
+            }
         }
 
         [TestFixture]
@@ -159,11 +159,24 @@ namespace FoodOfDayTests
             }
 
             [Test]
-            public void then_an_indeterminate_is_returned_after_the_first_dessert()
-            {               
-                Assert.True(sutSummary.Any(y => y.Item1 == DishType.Indeterminate));
- 
+            public void then_there_is_a_single_dessert_in_summary()
+            {
                 Assert.True(sutSummary.Count(y => y.Item1 == DishType.Dessert) == 1);
+            }
+            [Test]
+            public void then_an_indeterminate_is_returned_after_the_first_dessert()
+            {
+                var indeterminateDish = sutSummary.SingleOrDefault(x => x.Item1 == DishType.Indeterminate);
+                Assert.IsNotNull(indeterminateDish);
+                var dessert = sutSummary.SingleOrDefault(x => x.Item1 == DishType.Dessert);
+
+                var indyIdx = sutSummary.IndexOf(indeterminateDish);
+                var desIdx = sutSummary.IndexOf(dessert);
+
+                Assert.AreEqual(desIdx, indyIdx - 1);
+                
+
+
             }
         }
 
