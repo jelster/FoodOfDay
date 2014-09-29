@@ -38,11 +38,23 @@ namespace FoodOfDay
 
             var meal = Meal.Create(options.TimeOfDay, options.FoodOrder.ToArray());
             var summary = meal.GenerateMealSummary();
-            var output = new List<string> { options.TimeOfDay.ToString() };
-            
-            Console.Write(string.Format("{0}, ", options.TimeOfDay.ToString().ToLowerInvariant()));
-            var course = meal.Entree.Name.ToLowerInvariant();
-             
+            var outputText = GetMealOutput(summary, options);
+            Console.WriteLine(outputText);
+           
         }
+
+        public static string GetMealOutput(IEnumerable<CourseInfo> mealSummary, FoodConsoleOptions options)
+        {
+            var output = new List<string>();
+            //var timeOfDayString = string.Format("{0}, ", options.TimeOfDay.ToString().ToLowerInvariant());
+            //output.Add(timeOfDayString);
+            foreach (var item in mealSummary)
+            {
+                output.Add(item.ToString());
+            }
+            return string.Join(", ", output);
+        }
+
+
     }
 }
