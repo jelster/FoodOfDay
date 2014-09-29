@@ -174,9 +174,15 @@ namespace FoodOfDayTests
                 var desIdx = sutSummary.IndexOf(dessert);
 
                 Assert.AreEqual(desIdx, indyIdx - 1);
-                
+            }
 
+            [Test]
+            public void then_no_other_dishes_appear_after_indeterminate()
+            {
+                var indeterminateDish = sutSummary.SingleOrDefault(x => x.Dish.Kind == DishType.Indeterminate);
+                var indyIdx = sutSummary.IndexOf(indeterminateDish);
 
+                Assert.AreSame(sutSummary.Last(), indeterminateDish);
             }
         }
 

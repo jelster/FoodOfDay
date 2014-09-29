@@ -33,7 +33,6 @@ namespace FoodOfDay
         public static readonly Dish Coffee = new Dish("Coffee", DishType.Drink, new[] { MealTime.Morning });
         public static readonly Dish Wine = new Dish("Wine", DishType.Drink, new[] { MealTime.Night });
         public static readonly Dish Cake = new Dish("Cake", DishType.Dessert, new[] { MealTime.Night });
-
         public static readonly Dish Empty = new Dish("Error", DishType.Indeterminate, new[] { MealTime.Morning, MealTime.Night });
 
         public static IEnumerable<Dish> Entrees { get { return Courses[DishType.Entree]; } }

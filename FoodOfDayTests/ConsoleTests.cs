@@ -9,6 +9,9 @@ namespace FoodOfDayTests
     [TestFixture]
     public class ConsoleTests
     {
+        // TODO: output-based tests could be refactored into data table -driven tests
+
+
         [Test]
         public void CommandLineShouldParseTimeOfDay()
         {
@@ -32,7 +35,6 @@ namespace FoodOfDayTests
         [Test]
         public void ValidInputShouldOutputDishes()
         {
-
             var opts = FoodConsoleOptions.Parse(new[] { "morning", "1", "2", "3" });
             var meal = Meal.Create(opts.TimeOfDay, opts.FoodOrder.ToArray());
             var output = FoodConsole.GetMealOutput(meal.GenerateMealSummary(), opts);
@@ -78,5 +80,44 @@ namespace FoodOfDayTests
             Console.WriteLine(output);
             Assert.AreEqual(expected, output);
         }
+
+        [Test]
+        public void FullDinnerOrderOutputsAllDishes()
+        {
+            var opts = FoodConsoleOptions.Parse(new[] { "night", "1", "2", "3", "4" });
+            var meal = Meal.Create(opts.TimeOfDay, opts.FoodOrder.ToArray());
+            var output = FoodConsole.GetMealOutput(meal.GenerateMealSummary(), opts);
+
+            const string expected = "steak, potato, wine, cake";
+            Console.WriteLine(output);
+            Assert.AreEqual(expected, output);
+        }
+
+        [Test]
+        public void InvalidDinnerOutputsOnlyValidDishes()
+        {
+            var opts = FoodConsoleOptions.Parse(new[] { "night", "1", "2", "3", "5" });
+            var meal = Meal.Create(opts.TimeOfDay, opts.FoodOrder.ToArray());
+            var output = FoodConsole.GetMealOutput(meal.GenerateMealSummary(), opts);
+
+            const string expected = "steak, potato, wine, error";
+            Console.WriteLine(output);
+            Assert.AreEqual(expected, output);
+        }
+
+
+        [Test]
+        public void InvalidInputStopsProcessingOutput()
+        {
+            var opts = FoodConsoleOptions.Parse(new[] { "night", "1", "1", "2", "3", "5" });
+            var meal = Meal.Create(opts.TimeOfDay, opts.FoodOrder.ToArray());
+            var output = FoodConsole.GetMealOutput(meal.GenerateMealSummary(), opts);
+
+            const string expected = "steak, error";
+            Console.WriteLine(output);
+            Assert.AreEqual(expected, output);
+        }
+
+        
     }
 }

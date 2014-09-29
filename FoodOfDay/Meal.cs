@@ -24,7 +24,6 @@ namespace FoodOfDay
         }
         public override string ToString()
         {
-            string fmt = "{0}";
             if (Count > 1) {
                 return string.Format("{0}(x{1})", Dish.Name.ToLowerInvariant(), Count);
             }
@@ -34,9 +33,10 @@ namespace FoodOfDay
     }
     public class Meal
     {
-        public Dish this[DishType d] {
+        protected Dish this[DishType d] {
             get {
                 Dish dish;
+
                 switch (d) {
                     case DishType.Entree:
                         dish = this.Entree;
@@ -53,8 +53,9 @@ namespace FoodOfDay
                     case DishType.Indeterminate:
                         dish = Dish.Empty;
                         break;
-                    default:
-                        throw new InvalidOperationException();
+                    default:                       
+                         dish = Dish.Empty; // NOTE: ??should we throw new InvalidOperationException();
+                         break;
                 }
                 return dish;
             }
@@ -101,11 +102,14 @@ namespace FoodOfDay
        
         public IEnumerable<CourseInfo> GenerateMealSummary()
         {
-            var groups = specifiedDishes.OrderBy(x => x).GroupBy(x => x).Select(x =>new CourseInfo { Dish = this[x.Key] ?? Dish.Empty, Count = x.Count() });
+            var groups = specifiedDishes.OrderBy(x => x).GroupBy(x => x).Select(x => new CourseInfo { Dish = this[x.Key] ?? Dish.Empty, Count = x.Count() });
+            
+            // TODO: this block smells a bit raunchy. refactor with liberal application of febreeze.
             foreach (var item in groups)
             {                
                 if (TimeOfDay == MealTime.Morning && item.Dish.Kind != DishType.Drink && item.Count > 1)
                 {
+                    item.Count = 1;
                     yield return item;
                     yield return new CourseInfo { Dish = Dish.Empty, Count = 1 };
                    
@@ -113,6 +117,7 @@ namespace FoodOfDay
                 }
                 if (TimeOfDay == MealTime.Night && item.Dish.Kind != DishType.Side && item.Count > 1)
                 {
+                    item.Count = 1;
                     yield return item;
                     yield return new CourseInfo { Dish = Dish.Empty, Count = 1 };                
 
